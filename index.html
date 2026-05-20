@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>✨ สำหรับพอ ✨</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600&family=Mitr:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --pink: #e84393; --pink-light: #fd79a8; --pink-dark: #c0186d;
+    --purple: #6C5CE7; --purple-light: #a29bfe;
+    --gold: #fdcb6e; --gold-dark: #e17055;
+    --bg: #1a0a2e; --card: rgba(255,255,255,0.06); --card-border: rgba(255,255,255,0.12);
+    --text: #fff0f8; --text-muted: rgba(255,240,248,0.55);
+    --radius: 20px; --radius-sm: 14px;
+  }
+  html, body { min-height:100vh; background:var(--bg); color:var(--text); font-family:'Sarabun',sans-serif; font-size:16px; line-height:1.6; overflow-x:hidden; }
+  body::before { content:''; position:fixed; top:-20%; left:-10%; width:60vw; height:60vw; background:radial-gradient(circle,rgba(232,67,147,0.15) 0%,transparent 70%); pointer-events:none; z-index:0; }
+  body::after { content:''; position:fixed; bottom:-20%; right:-10%; width:55vw; height:55vw; background:radial-gradient(circle,rgba(108,92,231,0.18) 0%,transparent 70%); pointer-events:none; z-index:0; }
+  .wrap { position:relative; z-index:1; max-width:440px; margin:0 auto; padding:0 1rem 3rem; min-height:100vh; }
+  .screen { display:none; } .screen.active { display:block; }
+
+  /* stars */
+  .stars { position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+  .star { position:absolute; background:white; border-radius:50%; opacity:0; animation:twinkle var(--d,3s) var(--delay,0s) infinite; }
+  @keyframes twinkle { 0%,100%{opacity:0} 50%{opacity:var(--op,0.6)} }
+
+  /* home screen */
+  .home-hero { text-align:center; padding:3rem 0 2rem; }
+  .avatar-wrap { position:relative; display:inline-block; margin-bottom:1.2rem; }
+  .avatar { width:110px; height:110px; border-radius:50%; background:linear-gradient(135deg,#fd79a8,#a29bfe); display:flex; align-items:center; justify-content:center; font-size:56px; margin:0 auto; box-shadow:0 0 40px rgba(232,67,147,0.4); animation:float 3s ease-in-out infinite; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+  .sparkle { position:absolute; font-size:18px; animation:sparkle 2s ease-in-out infinite; }
+  .sparkle-1 { top:-4px; right:-8px; animation-delay:0s; }
+  .sparkle-2 { bottom:4px; left:-12px; animation-delay:0.7s; }
+  .sparkle-3 { top:10px; left:-4px; animation-delay:1.4s; }
+  @keyframes sparkle { 0%,100%{transform:scale(1);opacity:0.6} 50%{transform:scale(1.3);opacity:1} }
+  .home-hero h1 { font-family:'Mitr',sans-serif; font-size:28px; font-weight:600; background:linear-gradient(135deg,#fff 0%,var(--pink-light) 60%,var(--purple-light) 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:0.3rem; }
+  .home-hero .subtitle { font-size:14px; color:var(--text-muted); line-height:1.7; }
+  .home-hero .subtitle span { color:var(--pink-light); font-weight:500; }
+
+  .info-card { background:var(--card); border:0.5px solid var(--card-border); border-radius:var(--radius); padding:1.25rem 1.25rem 1rem; backdrop-filter:blur(20px); margin-bottom:1.25rem; }
+  .info-row { display:flex; align-items:center; gap:10px; margin-bottom:8px; font-size:13px; color:var(--text-muted); }
+  .info-row:last-child { margin-bottom:0; }
+  .info-row .badge { background:rgba(232,67,147,0.15); border:0.5px solid rgba(232,67,147,0.3); border-radius:99px; padding:2px 10px; font-size:12px; color:var(--pink-light); }
+
+  .menu-title { font-size:13px; color:var(--text-muted); text-align:center; margin-bottom:1rem; letter-spacing:0.05em; }
+  .menu-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:1rem; }
+  .menu-btn { background:var(--card); border:0.5px solid var(--card-border); border-radius:var(--radius); padding:1.5rem 1rem; cursor:pointer; text-align:center; transition:all 0.2s; color:var(--text); backdrop-filter:blur(20px); }
+  .menu-btn:active { transform:scale(0.97); }
+  .menu-btn.pink:hover, .menu-btn.pink:active { background:rgba(232,67,147,0.15); border-color:var(--pink-light); box-shadow:0 0 20px rgba(232,67,147,0.2); }
+  .menu-btn.purple:hover, .menu-btn.purple:active { background:rgba(108,92,231,0.15); border-color:var(--purple-light); box-shadow:0 0 20px rgba(108,92,231,0.2); }
+  .menu-btn .btn-icon { font-size:40px; display:block; margin-bottom:0.6rem; }
+  .menu-btn .btn-label { font-family:'Mitr',sans-serif; font-size:15px; font-weight:500; }
+  .menu-btn .btn-sub { font-size:11px; color:var(--text-muted); margin-top:3px; }
+
+  /* back button */
+  .back-btn { display:flex; align-items:center; gap:6px; background:transparent; border:none; color:var(--text-muted); font-family:'Sarabun',sans-serif; font-size:14px; cursor:pointer; padding:1rem 0 0.5rem; }
+  .back-btn:active { opacity:0.7; }
+
+  /* fortune screen */
+  .fortune-top { text-align:center; padding:1rem 0 1.5rem; }
+  .fortune-icon { font-size:64px; display:block; margin-bottom:0.5rem; filter:drop-shadow(0 0 16px rgba(232,67,147,0.5)); animation:float 3s ease-in-out infinite; }
+  .fortune-date { font-size:12px; color:var(--text-muted); letter-spacing:0.06em; }
+  .fortune-title { font-family:'Mitr',sans-serif; font-size:20px; font-weight:600; margin-top:0.25rem; background:linear-gradient(135deg,#fff,var(--pink-light)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+
+  .f-card { background:var(--card); border:0.5px solid var(--card-border); border-radius:var(--radius); padding:1.25rem; backdrop-filter:blur(20px); margin-bottom:1rem; }
+  .f-card-title { font-size:12px; color:var(--text-muted); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:0.9rem; display:flex; align-items:center; gap:6px; }
+  .stars-row { font-size:20px; letter-spacing:3px; margin-bottom:0.4rem; }
+  .overall-text { font-size:14px; color:var(--text-muted); line-height:1.7; }
+
+  .score-item { margin-bottom:10px; }
+  .score-head { display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px; }
+  .score-val { color:var(--text-muted); }
+  .score-track { height:5px; background:rgba(255,255,255,0.08); border-radius:99px; overflow:hidden; }
+  .score-fill { height:100%; border-radius:99px; }
+  .score-desc { font-size:12px; color:var(--text-muted); margin-top:4px; line-height:1.5; }
+
+  .lucky-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .lucky-cell { background:rgba(255,255,255,0.04); border:0.5px solid rgba(255,255,255,0.08); border-radius:var(--radius-sm); padding:12px; }
+  .lucky-label { font-size:11px; color:var(--text-muted); margin-bottom:5px; }
+  .lucky-val { font-size:14px; font-weight:500; display:flex; align-items:center; gap:6px; }
+  .color-dot { width:14px; height:14px; border-radius:50%; flex-shrink:0; border:1px solid rgba(255,255,255,0.2); }
+  .outfit-box { background:rgba(232,67,147,0.1); border:0.5px solid rgba(232,67,147,0.25); border-radius:var(--radius-sm); padding:12px 14px; font-size:14px; line-height:1.6; margin-top:10px; }
+  .outfit-label { font-size:11px; color:var(--pink-light); margin-bottom:4px; }
+  .avoid-box { background:rgba(225,112,85,0.1); border:0.5px solid rgba(225,112,85,0.25); border-radius:var(--radius-sm); padding:12px 14px; font-size:14px; line-height:1.6; margin-top:10px; }
+  .avoid-label { font-size:11px; color:#fab1a0; margin-bottom:4px; }
+  .advice-text { font-size:14px; line-height:1.75; }
+
+  /* tarot screen */
+  .tarot-intro { text-align:center; padding:1rem 0 1.5rem; }
+  .tarot-intro .t-icon { font-size:64px; display:block; margin-bottom:0.5rem; animation:float 3s ease-in-out infinite; }
+  .tarot-intro h2 { font-family:'Mitr',sans-serif; font-size:20px; font-weight:600; background:linear-gradient(135deg,#fff,var(--purple-light)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .tarot-intro p { font-size:13px; color:var(--text-muted); margin-top:0.4rem; }
+
+  .tarot-pick-title { font-size:14px; color:var(--text-muted); text-align:center; margin-bottom:1rem; }
+  .spread-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:1rem; }
+  .spread-btn { background:var(--card); border:0.5px solid var(--card-border); border-radius:var(--radius-sm); padding:1rem; cursor:pointer; text-align:center; color:var(--text); transition:all 0.2s; }
+  .spread-btn:active { transform:scale(0.97); background:rgba(108,92,231,0.15); border-color:var(--purple-light); }
+  .spread-btn .s-icon { font-size:28px; display:block; margin-bottom:0.4rem; }
+  .spread-btn .s-label { font-size:13px; font-weight:500; }
+  .spread-btn .s-sub { font-size:11px; color:var(--text-muted); margin-top:2px; }
+
+  /* card draw */
+  .draw-area { text-align:center; padding:1rem 0; }
+  .draw-instruction { font-size:14px; color:var(--text-muted); margin-bottom:1.5rem; line-height:1.7; }
+  .cards-row { display:flex; justify-content:center; gap:10px; margin-bottom:1.5rem; flex-wrap:wrap; }
+  .tarot-card { width:80px; height:130px; border-radius:10px; cursor:pointer; transition:all 0.3s; position:relative; }
+  .tarot-card .card-back { width:100%; height:100%; border-radius:10px; background:linear-gradient(135deg,#4834d4,#6C5CE7); border:1.5px solid rgba(162,155,254,0.4); display:flex; align-items:center; justify-content:center; font-size:28px; transition:all 0.3s; }
+  .tarot-card.flipped .card-back { display:none; }
+  .tarot-card .card-front { display:none; width:100%; height:100%; border-radius:10px; border:1.5px solid rgba(253,203,110,0.5); background:linear-gradient(160deg,#1a0a2e,#2d1b4e); flex-direction:column; align-items:center; justify-content:center; padding:6px; }
+  .tarot-card.flipped .card-front { display:flex; }
+  .tarot-card .card-front .card-emoji { font-size:26px; margin-bottom:4px; }
+  .tarot-card .card-front .card-name { font-size:9px; color:var(--gold); text-align:center; line-height:1.3; font-weight:500; }
+  .tarot-card.flipped { transform:scale(1.05); }
+  .tarot-card:not(.flipped):hover { transform:translateY(-6px); box-shadow:0 8px 24px rgba(108,92,231,0.4); }
+
+  .draw-btn { width:100%; padding:15px; background:linear-gradient(135deg,var(--purple),var(--purple-dark,#4834d4)); border:none; border-radius:var(--radius-sm); color:white; font-family:'Mitr',sans-serif; font-size:16px; cursor:pointer; box-shadow:0 6px 20px rgba(108,92,231,0.35); transition:transform 0.15s; }
+  .draw-btn:active { transform:scale(0.98); }
+  .draw-btn:disabled { opacity:0.4; cursor:not-allowed; }
+
+  /* tarot result */
+  .tarot-result { margin-top:1rem; }
+  .t-result-card { background:var(--card); border:0.5px solid var(--card-border); border-radius:var(--radius); padding:1.25rem; backdrop-filter:blur(20px); margin-bottom:1rem; }
+  .t-result-header { display:flex; align-items:center; gap:12px; margin-bottom:0.75rem; }
+  .t-result-emoji { font-size:36px; }
+  .t-result-name { font-family:'Mitr',sans-serif; font-size:16px; font-weight:500; }
+  .t-result-pos { font-size:11px; color:var(--text-muted); margin-top:2px; }
+  .t-result-meaning { font-size:14px; color:var(--text-muted); line-height:1.7; border-top:0.5px solid rgba(255,255,255,0.08); padding-top:0.75rem; }
+  .t-summary { background:rgba(108,92,231,0.1); border:0.5px solid rgba(108,92,231,0.3); border-radius:var(--radius-sm); padding:14px; font-size:14px; line-height:1.75; margin-bottom:1rem; }
+  .t-summary-label { font-size:11px; color:var(--purple-light); margin-bottom:6px; font-weight:500; }
+
+  /* bottom btns */
+  .bottom-btns { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:0.5rem; }
+  .btn-out { padding:13px; background:transparent; border:0.5px solid rgba(255,255,255,0.15); border-radius:var(--radius-sm); color:var(--text-muted); font-family:'Sarabun',sans-serif; font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; }
+  .btn-primary { padding:13px; background:rgba(232,67,147,0.2); border:0.5px solid rgba(232,67,147,0.4); border-radius:var(--radius-sm); color:var(--pink-light); font-family:'Sarabun',sans-serif; font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; }
+</style>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+<div class="wrap">
+
+  <!-- HOME -->
+  <div id="s-home" class="screen active">
+    <div class="home-hero">
+      <div class="avatar-wrap">
+        <div class="avatar">🌸</div>
+        <span class="sparkle sparkle-1">✨</span>
+        <span class="sparkle sparkle-2">⭐</span>
+        <span class="sparkle sparkle-3">💫</span>
+      </div>
+      <h1>สวัสดีครับ พอ 🌙</h1>
+      <p class="subtitle">ยินดีต้อนรับสู่ดินแดนลึกลับของ<span>พอ</span>โดยเฉพาะ<br>วันนี้อยากรู้เรื่องอะไรคะ?</p>
+    </div>
+
+    <div class="info-card">
+      <div class="info-row">🎂 <span>เกิด 19 ธันวาคม 2549 (วันอังคาร)</span></div>
+      <div class="info-row">♊ <span>ราศีธนู &nbsp;|&nbsp; ดาวพฤหัสบดีปกครอง</span></div>
+      <div class="info-row">👯 <span>แฝดพี่คนโต</span> <span class="badge">Gemini Twin ♊</span></div>
+      <div class="info-row">🌙 <span>หมายเลขชีวิต (Life Path) <strong>3</strong> — นักสร้างสรรค์</span></div>
+    </div>
+
+    <p class="menu-title">🔮 เลือกสิ่งที่อยากรู้วันนี้</p>
+    <div class="menu-grid">
+      <button class="menu-btn pink" onclick="show('s-fortune')">
+        <span class="btn-icon">🌟</span>
+        <div class="btn-label">ดูดวงประจำวัน</div>
+        <div class="btn-sub">ความรัก การงาน การเงิน</div>
+      </button>
+      <button class="menu-btn purple" onclick="show('s-tarot-menu')">
+        <span class="btn-icon">🃏</span>
+        <div class="btn-label">ดูดวงไพ่ยิปซี</div>
+        <div class="btn-sub">เลือกไพ่รับคำทำนาย</div>
+      </button>
+    </div>
+  </div>
+
+  <!-- FORTUNE -->
+  <div id="s-fortune" class="screen">
+    <button class="back-btn" onclick="show('s-home')">← กลับ</button>
+    <div class="fortune-top">
+      <span class="fortune-icon">🌸</span>
+      <div class="fortune-date" id="f-date"></div>
+      <div class="fortune-title">ดวงของพอวันนี้</div>
+    </div>
+    <div class="f-card" id="f-overall"></div>
+    <div class="f-card" id="f-scores"></div>
+    <div class="f-card" id="f-lucky"></div>
+    <div class="f-card" id="f-advice"></div>
+    <div class="bottom-btns">
+      <button class="btn-out" onclick="show('s-home')">🏠 หน้าหลัก</button>
+      <button class="btn-primary" onclick="renderFortune()">🔄 สุ่มใหม่</button>
+    </div>
+  </div>
+
+  <!-- TAROT MENU -->
+  <div id="s-tarot-menu" class="screen">
+    <button class="back-btn" onclick="show('s-home')">← กลับ</button>
+    <div class="tarot-intro">
+      <span class="t-icon">🃏</span>
+      <h2>ไพ่ยิปซีสำหรับพอ</h2>
+      <p>หายใจลึกๆ ตั้งจิตให้นิ่ง แล้วเลือกรูปแบบที่ต้องการ</p>
+    </div>
+    <p class="tarot-pick-title">เลือกรูปแบบการดูไพ่</p>
+    <div class="spread-grid">
+      <button class="spread-btn" onclick="startTarot(1)">
+        <span class="s-icon">🌙</span>
+        <div class="s-label">ไพ่ใบเดียว</div>
+        <div class="s-sub">คำตอบรวดเร็ว</div>
+      </button>
+      <button class="spread-btn" onclick="startTarot(3)">
+        <span class="s-icon">✨</span>
+        <div class="s-label">3 ใบ</div>
+        <div class="s-sub">อดีต ปัจจุบัน อนาคต</div>
+      </button>
+      <button class="spread-btn" onclick="startTarot(5)">
+        <span class="s-icon">💫</span>
+        <div class="s-label">5 ใบ</div>
+        <div class="s-sub">วิเคราะห์ลึก</div>
+      </button>
+      <button class="spread-btn" onclick="startTarot(7)">
+        <span class="s-icon">🔮</span>
+        <div class="s-label">7 ใบ</div>
+        <div class="s-sub">ภาพรวมชีวิต</div>
+      </button>
+    </div>
+  </div>
+
+  <!-- TAROT DRAW -->
+  <div id="s-tarot-draw" class="screen">
+    <button class="back-btn" onclick="show('s-tarot-menu')">← กลับ</button>
+    <div class="tarot-intro">
+      <span class="t-icon">🃏</span>
+      <h2 id="draw-title">เลือกไพ่ของพอ</h2>
+    </div>
+    <p class="draw-instruction" id="draw-instruction"></p>
+    <div class="cards-row" id="cards-row"></div>
+    <button class="draw-btn" id="draw-btn" onclick="revealTarot()" disabled>เปิดเผยไพ่ ✨</button>
+    <div class="tarot-result" id="tarot-result" style="display:none;"></div>
+  </div>
+
+</div>
+
+<script>
+// ── Stars ──
+(function(){
+  const c=document.getElementById('stars');
+  for(let i=0;i<70;i++){
+    const s=document.createElement('div');
+    s.className='star';
+    const sz=1+Math.random()*2;
+    s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;width:${sz}px;height:${sz}px;--d:${2+Math.random()*5}s;--delay:${Math.random()*6}s;--op:${0.2+Math.random()*0.6};`;
+    c.appendChild(s);
+  }
+})();
+
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+  if(id==='s-fortune') renderFortune();
+}
+
+// ── FORTUNE DATA ──
+const FDB = {
+  overall:[
+    "ดาวพฤหัสบดีซึ่งเป็นดาวปกครองราศีธนูของพอส่งพลังงานบวกมาอย่างเต็มที่วันนี้ ทุกอย่างไหลลื่น",
+    "พลังงานของราศีธนูทำให้วันนี้เต็มไปด้วยความกระตือรือร้นและความคิดสร้างสรรค์",
+    "เลข 3 ซึ่งเป็นเลขชีวิตของพอทำงานอยู่เบื้องหลัง วันนี้การสื่อสารและความสัมพันธ์จะโดดเด่น",
+    "พลังของแฝดคนโตทำให้วันนี้พอมีสัญชาตญาณที่แหลมคมเป็นพิเศษ เชื่อใจตัวเองได้เลย",
+    "วันนี้จักรวาลส่งสัญญาณดีมาถึงพอ เป็นวันที่เหมาะกับการเริ่มต้นสิ่งใหม่",
+    "พลังงานวันอังคารซึ่งเป็นวันเกิดของพอกลับมาหนุนอีกครั้ง พลังงานดีๆ กำลังหมุนวน",
+  ],
+  love:[
+    "ราศีธนูมีเสน่ห์ตามธรรมชาติ วันนี้คนรอบข้างรู้สึกดึงดูดใจพอเป็นพิเศษ",
+    "ดาวศุกร์ส่งพลังมาเสริมเรื่องความรัก เปิดใจรับความรู้สึกดีๆ ได้เลย",
+    "ความสัมพันธ์ต้องการการสื่อสารที่ตรงไปตรงมา พอมีพรสวรรค์ด้านนี้อยู่แล้ว",
+    "วันนี้หัวใจพอเปิดกว้าง พร้อมรับและให้ความรักในแบบที่สวยงาม",
+    "อาจมีคนพิเศษส่งสัญญาณมา ใช้สัญชาตญาณราศีธนูในการอ่านสถานการณ์",
+  ],
+  work:[
+    "ความคิดสร้างสรรค์ของเลข 3 พุ่งสูงมากวันนี้ เหมาะกับงานที่ต้องใช้จินตนาการ",
+    "ราศีธนูเป็นนักวางแผนที่ดี วันนี้จัดลำดับความสำคัญแล้วลงมือทำได้เลย",
+    "พลังงานของแฝดพี่ทำให้วันนี้พอมีความรับผิดชอบสูง งานออกมาดีแน่นอน",
+    "มีโอกาสได้แสดงศักยภาพ ดาวพฤหัสฯ หนุนให้ทุกอย่างขยายตัวในทิศทางที่ดี",
+    "วันนี้เหมาะกับการเรียนรู้สิ่งใหม่ ราศีธนูชอบการขยายขอบเขตความรู้",
+  ],
+  money:[
+    "ดาวพฤหัสบดีเป็นดาวแห่งโชคลาภ วันนี้อาจมีข่าวดีเรื่องเงินทองเล็กน้อย",
+    "ระมัดระวังการใช้จ่ายฟุ่มเฟือย เก็บออมไว้บ้างจะดีต่ออนาคตมาก",
+    "ไม่ใช่วันดีสำหรับการลงทุนใหญ่ รอจังหวะที่ดาวเอื้ออำนวยกว่านี้",
+    "มีรายรับเล็กน้อยที่ไม่คาดฝัน เลข 3 ของพอนำโชคมาเรื่องการเงิน",
+    "การเงินมั่นคง แต่อย่าประมาท วางแผนระยะยาวจะทำให้อนาคตสดใส",
+  ],
+  health:[
+    "ราศีธนูมีพลังงานสูงตามธรรมชาติ แต่วันนี้อย่าลืมพักผ่อนให้เพียงพอด้วย",
+    "ร่างกายแข็งแรง แต่จิตใจอาจเหนื่อยล้าได้ ลองหาเวลาทำสิ่งที่ชอบเพื่อผ่อนคลาย",
+    "ดูแลตัวเองด้วยความรัก ดื่มน้ำให้มากขึ้นและนอนหลับให้เพียงพอ",
+    "พลังงานดีมาก เหมาะกับการออกกำลังกายหรือทำกิจกรรมที่ชอบ",
+    "ฟังสัญญาณจากร่างกายตัวเอง ราศีธนูมีสัญชาตญาณที่ดีในการดูแลตนเอง",
+  ],
+  outfit:[
+    ["สีม่วง","#9b59b6","สีม่วงเสริมพลังจิตวิญญาณและความลึกลับ ซึ่งเป็นพลังงานของราศีธนู ใส่แล้วดูมีออร่า"],
+    ["สีฟ้าครามน้ำทะเล","#2980b9","สีฟ้าส่งเสริมความสงบและปัญญา เหมาะกับวันที่ต้องใช้ความคิดมาก"],
+    ["สีทอง","#f39c12","สีทองเป็นสีแห่งดาวพฤหัสบดี ดาวปกครองของพอ ใส่แล้วดึงดูดโชคลาภ"],
+    ["สีขาวนวล","#ecf0f1","สีขาวให้ความบริสุทธิ์และความสดชื่น เหมาะกับวันที่อยากเริ่มต้นใหม่"],
+    ["สีชมพูพีช","#fd79a8","สีชมพูเสริมเสน่ห์และความน่ารัก ดาวศุกร์หนุนความรักให้พอวันนี้"],
+    ["สีเขียวมรกต","#27ae60","สีเขียวนำความเจริญและสุขภาพดี เหมาะกับวันที่ต้องการพลังงานสดชื่น"],
+    ["สีแดงเข้ม","#e74c3c","สีแดงให้พลังและความมั่นใจ เหมาะกับวันที่ต้องการสร้างความประทับใจ"],
+    ["สีน้ำเงินกรมท่า","#2c3e50","สีน้ำเงินเข้มให้ความน่าเชื่อถือและความสง่างาม"],
+  ],
+  items:["คริสตัลอเมทิสต์","ดอกไม้สีม่วง","พระเครื่อง","สร้อยข้อมือเงิน","ผ้าพันคอ","กระเป๋าใบโปรด","หนังสือที่ชอบ","เครื่องประดับทอง","ต้นไม้เล็กๆ","น้ำหอม"],
+  nums:[["3","9"],["6","8"],["1","7"],["4","5"],["2","9"],["3","6"],["7","8"]],
+  dirs:["ทิศเหนือ","ทิศตะวันออก","ทิศตะวันตกเฉียงใต้","ทิศใต้","ทิศตะวันออกเฉียงเหนือ","ทิศตะวันตก"],
+  avoid:[
+    "ระวังพูดเร็วเกินไปโดยไม่คิด ราศีธนูบางครั้งใจร้อน ใจเย็นไว้จะดีกว่า",
+    "หลีกเลี่ยงการตัดสินใจใหญ่โดยไม่ปรึกษาคนที่ไว้ใจได้ก่อน",
+    "อย่าเชื่อข่าวลือง่ายๆ ใช้สัญชาตญาณราศีธนูตรวจสอบก่อนเสมอ",
+    "ระวังการใช้จ่ายเกินงบ เก็บออมไว้บ้างจะดีต่อตัวเองมากกว่า",
+    "อย่าเปรียบตัวเองกับคนอื่น พอมีเอกลักษณ์ของตัวเองที่สวยงามมาก",
+    "ระวังความเครียดสะสม หยุดพักเมื่อร่างกายบอก อย่าฝืนตัวเองมากเกินไป",
+  ],
+  advice:[
+    "พอเกิดมาพร้อมพลังของราศีธนูที่รักอิสระและมองโลกกว้าง วันนี้จงปล่อยให้ตัวเองเป็นธรรมชาติ เชื่อในสัญชาตญาณของตัวเองได้เลย จักรวาลรู้ว่าพอเดินอยู่บนเส้นทางที่ถูกต้อง",
+    "ในฐานะแฝดพี่ พอมีพลังงานพิเศษของการเป็นผู้นำและความรับผิดชอบ วันนี้จงภูมิใจในตัวเอง และอย่าลืมดูแลตัวเองให้ดีเหมือนที่ดูแลคนอื่นด้วยนะคะ",
+    "เลข 3 บอกว่าพอเกิดมาเพื่อสร้างสรรค์และสื่อสาร วันนี้แสดงออกมาเถอะ ไม่ว่าจะเป็นศิลปะ ดนตรี หรือการพูดคุยกับคนที่รัก ทุกอย่างจะออกมาสวยงาม",
+    "ดาวพฤหัสบดีบอกว่าวันนี้เป็นวันดีสำหรับการขยายขอบเขตชีวิต ลองทำสิ่งใหม่ที่กลัวอยู่สักอย่าง พอมีพลังมากกว่าที่คิดแน่นอนค่ะ",
+    "วันที่เกิดของพอ 19 ลดเหลือ 1+9=10 แล้ว 1+0=1 พลังของเลข 1 คือความเป็นผู้นำ วันนี้จงมั่นใจในตัวเอง แสดงความเป็นพอออกมาอย่างเต็มที่",
+  ]
+};
+
+function pick(arr,seed){return arr[((seed%arr.length)+arr.length)%arr.length];}
+
+function renderFortune(){
+  const now=new Date();
+  const seed=now.getFullYear()*10000+(now.getMonth()+1)*100+now.getDate();
+  const s=n=>((seed*(n+7)*31+n*13)%97+97)%97;
+
+  const score=(n)=>Math.floor(s(n)%4)+2;
+  const ov=score(1), lv=score(2), wk=score(3), mn=score(4), hl=score(5);
+  const outfit=pick(FDB.outfit,s(6));
+  const nums=pick(FDB.nums,s(7));
+
+  document.getElementById('f-date').textContent=now.toLocaleDateString('th-TH',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+
+  document.getElementById('f-overall').innerHTML=`
+    <div class="f-card-title">🌟 ดวงรวมของพอ</div>
+    <div class="stars-row">${'⭐'.repeat(ov)}${'☆'.repeat(5-ov)}</div>
+    <p class="overall-text">${pick(FDB.overall,s(8))}</p>
+  `;
+
+  const sl={love:'❤️ ความรัก',work:'💼 การงาน',money:'💰 การเงิน',health:'🌿 สุขภาพ'};
+  const sv={love:lv,work:wk,money:mn,health:hl};
+  const st={love:pick(FDB.love,s(9)),work:pick(FDB.work,s(10)),money:pick(FDB.money,s(11)),health:pick(FDB.health,s(12))};
+  const bc=v=>v>=4?'linear-gradient(90deg,#00b894,#55efc4)':v>=3?'linear-gradient(90deg,#fdcb6e,#e17055)':'linear-gradient(90deg,#e17055,#d63031)';
+
+  document.getElementById('f-scores').innerHTML=`
+    <div class="f-card-title">📊 ดวงแต่ละด้าน</div>
+    ${Object.entries(sv).map(([k,v])=>`
+      <div class="score-item">
+        <div class="score-head"><span>${sl[k]}</span><span class="score-val">${v}/5</span></div>
+        <div class="score-track"><div class="score-fill" style="width:${v*20}%;background:${bc(v)}"></div></div>
+        <p class="score-desc">${st[k]}</p>
+      </div>
+    `).join('')}
+  `;
+
+  document.getElementById('f-lucky').innerHTML=`
+    <div class="f-card-title">✨ สิ่งมงคลของพอ</div>
+    <div class="lucky-grid">
+      <div class="lucky-cell"><div class="lucky-label">🎨 สีมงคล</div><div class="lucky-val"><span class="color-dot" style="background:${outfit[1]}"></span>${outfit[0]}</div></div>
+      <div class="lucky-cell"><div class="lucky-label">🔢 เลขมงคล</div><div class="lucky-val">${nums.join(', ')}</div></div>
+      <div class="lucky-cell"><div class="lucky-label">🍀 สิ่งของนำโชค</div><div class="lucky-val">${pick(FDB.items,s(13))}</div></div>
+      <div class="lucky-cell"><div class="lucky-label">🧭 ทิศมงคล</div><div class="lucky-val">${pick(FDB.dirs,s(14))}</div></div>
+    </div>
+    <div class="outfit-box"><div class="outfit-label">👗 คำแนะนำการแต่งตัว</div>${outfit[2]}</div>
+    <div class="avoid-box"><div class="avoid-label">⚠️ สิ่งที่ควรระวัง</div>${pick(FDB.avoid,s(15))}</div>
+  `;
+
+  document.getElementById('f-advice').innerHTML=`
+    <div class="f-card-title">💌 ข้อความจากจักรวาล</div>
+    <p class="advice-text">${pick(FDB.advice,s(16))}</p>
+  `;
+}
+
+// ── TAROT DATA ──
+const TAROT = [
+  {e:"☀️",n:"The Sun",m:"แสงสว่างและความสุขกำลังมา พลังงานบวกเต็มเปี่ยม สิ่งที่ปรารถนาจะเป็นจริงในเร็วๆ นี้"},
+  {e:"🌙",n:"The Moon",m:"ความลึกลับและสัญชาตญาณ ฟังเสียงภายในใจ บางสิ่งซ่อนเร้นอยู่รอการค้นพบ"},
+  {e:"⭐",n:"The Star",m:"ความหวังและแรงบันดาลใจ จักรวาลเป็นพยานว่าความฝันของพอจะเป็นจริง"},
+  {e:"⚡",n:"The Tower",m:"การเปลี่ยนแปลงอย่างฉับพลัน แต่จะนำมาซึ่งการเติบโตที่ยิ่งใหญ่"},
+  {e:"🌍",n:"The World",m:"ความสำเร็จและความสมบูรณ์ วงจรหนึ่งกำลังจบลง และสิ่งใหม่ที่ดีกว่ากำลังมา"},
+  {e:"💀",n:"Death",m:"การเปลี่ยนแปลงและการเริ่มต้นใหม่ อย่ากลัว นี่คือโอกาสที่ดีที่สุด"},
+  {e:"🔮",n:"The High Priestess",m:"ปัญญาและสัญชาตญาณภายใน เชื่อใจตัวเองและคำตอบที่อยู่ในใจ"},
+  {e:"🃏",n:"The Fool",m:"การผจญภัยและโอกาสใหม่ กล้าก้าวออกไปแม้จะไม่แน่ใจ"},
+  {e:"⚖️",n:"Justice",m:"ความยุติธรรมและสมดุล สิ่งที่ทำไปด้วยความดีจะกลับมาหาพอ"},
+  {e:"❤️",n:"The Lovers",m:"ความรักและการเลือก ทั้งความรักและความสัมพันธ์กำลังจะงอกงาม"},
+  {e:"🌀",n:"The Wheel",m:"โชคชะตาหมุนไปในทิศทางที่ดี จังหวะชีวิตกำลังเปลี่ยนเพื่อสิ่งที่ดีกว่า"},
+  {e:"🦁",n:"Strength",m:"ความเข้มแข็งและความกล้า พอมีพลังภายในที่ยิ่งใหญ่มากกว่าที่คิด"},
+  {e:"🏆",n:"The Chariot",m:"ชัยชนะและความมุ่งมั่น เดินหน้าต่อไปด้วยความมั่นใจ ความสำเร็จรออยู่"},
+  {e:"👼",n:"The Judgement",m:"การตื่นรู้และการให้อภัย ปล่อยวางสิ่งที่ไม่ดีแล้วเริ่มต้นใหม่อย่างสดใส"},
+  {e:"🧘",n:"The Hermit",m:"การใคร่ครวญและปัญญาภายใน ช่วงนี้เหมาะกับการนั่งสงบและฟังใจตัวเอง"},
+  {e:"🌟",n:"The Emperor",m:"อำนาจและความมั่นคง ถึงเวลาแสดงความเป็นผู้นำที่มีอยู่ในตัวพอแล้ว"},
+  {e:"🌸",n:"The Empress",m:"ความอุดมสมบูรณ์และความงาม ช่วงนี้ทุกอย่างจะเติบโตและงอกงาม"},
+  {e:"🌈",n:"Temperance",m:"สมดุลและความอดทน ค่อยๆ ทำทุกอย่างด้วยความสม่ำเสมอจะได้ผลดีที่สุด"},
+  {e:"😈",n:"The Devil",m:"ปลดปล่อยตัวเองจากสิ่งที่ยึดติด มีบางอย่างที่กักขังพออยู่ ถึงเวลาปล่อยวาง"},
+  {e:"🔱",n:"The Hierophant",m:"ประเพณีและความเชื่อมั่น แสวงหาคำแนะนำจากผู้ที่มีประสบการณ์มากกว่า"},
+  {e:"🪄",n:"The Magician",m:"ความสามารถและพลังสร้างสรรค์ พอมีทุกอย่างที่ต้องการอยู่แล้ว แค่ลงมือทำ"},
+];
+
+const POSITIONS = {
+  1: ["คำตอบ"],
+  3: ["อดีต","ปัจจุบัน","อนาคต"],
+  5: ["สถานการณ์","ความท้าทาย","รากเหตุ","ทางออก","ผลลัพธ์"],
+  7: ["ตัวตนปัจจุบัน","ความท้าทาย","อดีต","อนาคต","ความหวัง","สิ่งแวดล้อม","ผลลัพธ์สุดท้าย"],
+};
+
+const SUMMARIES = {
+  1: ["ไพ่บอกว่าคำตอบที่พอมองหาอยู่นั้นใกล้แล้ว เชื่อในสัญชาตญาณราศีธนูของตัวเอง",
+      "พลังงานของไพ่วันนี้บอกว่าพอกำลังเดินอยู่บนเส้นทางที่ถูกต้อง อย่าหยุด",
+      "จักรวาลส่งสัญญาณมาผ่านไพ่ใบนี้ว่าพอพร้อมแล้วสำหรับก้าวต่อไป"],
+  3: ["ไพ่ทั้งสามใบสะท้อนเส้นทางชีวิตของพอ อดีตหล่อหลอมให้แข็งแกร่ง ปัจจุบันกำลังเปลี่ยนแปลง และอนาคตสดใสรออยู่ข้างหน้า",
+      "พลังงานจากสามโลกกาลมาบรรจบกัน บอกว่าพอกำลังก้าวผ่านจุดเปลี่ยนสำคัญของชีวิต",
+      "ไพ่สามใบนี้บอกเล่าเรื่องราวที่สมบูรณ์ จงเชื่อในกระบวนการและก้าวเดินต่อไปด้วยความมั่นใจ"],
+  5: ["ไพ่ทั้งห้าใบชี้ให้เห็นภาพรวมของสถานการณ์ที่พออยู่ เส้นทางข้างหน้ายังมีอุปสรรคบ้าง แต่ทางออกก็ชัดเจนและผลลัพธ์จะดี",
+      "การวิเคราะห์ห้ามิติบอกว่าพอมีพลังเพียงพอในการก้าวข้ามความท้าทายที่กำลังเผชิญอยู่",
+      "ไพ่ห้าใบนี้เผยให้เห็นว่าพอมีทุกสิ่งที่จำเป็น แค่เชื่อมั่นในตัวเองและก้าวต่อไป"],
+  7: ["ภาพรวมชีวิตจากไพ่เจ็ดใบบอกว่าพอกำลังเติบโตอย่างมีนัยสำคัญ จักรวาลเห็นความพยายามและกำลังเตรียมรางวัลไว้ให้",
+      "เจ็ดคือเลขแห่งจิตวิญญาณ ไพ่เจ็ดใบนี้บอกว่าพอกำลังพัฒนาทั้งกายและใจไปพร้อมกัน",
+      "ไพ่ทั้งเจ็ดใบเปิดเผยภาพชีวิตที่กำลังพัฒนาไปในทิศทางที่ดี พอเดินมาได้ไกลมากแล้ว และจะไปได้ไกลกว่านี้อีกมาก"],
+};
+
+let tarotCount=0, drawnCards=[], selectedCards=[], shuffled=[];
+
+function startTarot(n){
+  tarotCount=n; drawnCards=[]; selectedCards=[];
+  shuffled=[...TAROT].sort(()=>Math.random()-0.5);
+  document.getElementById('draw-title').textContent=`เลือกไพ่ ${n} ใบ`;
+  document.getElementById('draw-instruction').textContent=`หายใจลึกๆ ตั้งจิตให้นิ่ง แล้วเลือกไพ่ที่รู้สึกดึงดูดใจ ${n} ใบ`;
+  document.getElementById('draw-btn').disabled=true;
+  document.getElementById('tarot-result').style.display='none';
+
+  const row=document.getElementById('cards-row');
+  const total=Math.min(n*3,21);
+  row.innerHTML='';
+  for(let i=0;i<total;i++){
+    const card=document.createElement('div');
+    card.className='tarot-card';
+    card.id=`tc-${i}`;
+    card.innerHTML=`<div class="card-back">🌟</div><div class="card-front"><span class="card-emoji"></span><span class="card-name"></span></div>`;
+    card.onclick=()=>selectCard(i);
+    row.appendChild(card);
+  }
+  show('s-tarot-draw');
+}
+
+function selectCard(i){
+  const card=document.getElementById(`tc-${i}`);
+  if(card.classList.contains('flipped')) return;
+  if(selectedCards.length>=tarotCount) return;
+  selectedCards.push(i);
+  const t=shuffled[i%shuffled.length];
+  card.querySelector('.card-emoji').textContent=t.e;
+  card.querySelector('.card-name').textContent=t.n;
+  card.classList.add('flipped');
+  drawnCards.push(t);
+  if(selectedCards.length>=tarotCount) document.getElementById('draw-btn').disabled=false;
+}
+
+function revealTarot(){
+  const positions=POSITIONS[tarotCount];
+  const summaries=SUMMARIES[tarotCount];
+  const summary=summaries[Math.floor(Math.random()*summaries.length)];
+
+  let html=`<div class="t-summary"><div class="t-summary-label">💌 ภาพรวมจากไพ่ทั้งหมด</div>${summary}</div>`;
+  drawnCards.forEach((card,i)=>{
+    html+=`<div class="t-result-card">
+      <div class="t-result-header">
+        <span class="t-result-emoji">${card.e}</span>
+        <div><div class="t-result-name">${card.n}</div><div class="t-result-pos">${positions[i]||'ไพ่ที่ '+(i+1)}</div></div>
+      </div>
+      <div class="t-result-meaning">${card.m}</div>
+    </div>`;
+  });
+  html+=`<div class="bottom-btns">
+    <button class="btn-out" onclick="show('s-home')">🏠 หน้าหลัก</button>
+    <button class="btn-primary" onclick="startTarot(${tarotCount})">🔄 ดูใหม่</button>
+  </div>`;
+
+  const result=document.getElementById('tarot-result');
+  result.innerHTML=html;
+  result.style.display='block';
+  document.getElementById('draw-btn').style.display='none';
+  result.scrollIntoView({behavior:'smooth'});
+}
+
+renderFortune();
+</script>
+</body>
+</html>
